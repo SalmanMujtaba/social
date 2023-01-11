@@ -2,22 +2,24 @@ import { GoogleLogin, GoogleOAuthProvider } from "@react-oauth/google";
 
 import React from "react";
 import { client } from "../client";
+// import { client } from "../client";
+import jwt_decode from "jwt-decode";
 import logo from "../assets/logowhite.png";
 import shareVideo from "../assets/share.mp4";
-// import { client } from "../client";
 import { useNavigate } from "react-router-dom";
 
 const Login = () => {
   const navigate = useNavigate();
   const responseGoogle = (response) => {
-    console.log(response);
-    localStorage.setItem("user", JSON.stringify(response.profileObj));
-    const { name, googleId, imageUrl } = response.profileObj;
+    const decodedCredentials = jwt_decode(response.credential);
+    console.log(decodedCredentials, "==");
+    localStorage.setItem("user", JSON.stringify(decodedCredentials));
+    const { name, sub, picture } = decodedCredentials;
     const doc = {
-      _id: googleId,
+      _id: sub,
       _type: "user",
       userName: name,
-      image: imageUrl,
+      image: picture,
     };
     client.createIfNotExists(doc).then(() => {
       navigate("/", { replace: true });
