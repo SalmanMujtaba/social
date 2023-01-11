@@ -2,7 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 body {
-  font-familty: 'Lato', sans-serif;
+  font-family: 'Lato', sans-serif;
 }
 
 .hide-scrollbar::-webkit-scrollbar {
