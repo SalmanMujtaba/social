@@ -8,6 +8,7 @@ const NavBar = ({ searchTerm, user, setSearchTerm }) => {
   if (!user) {
     return null;
   }
+
   return (
     <div className=' flex md:gap-5 mt-5 pb-7 w-full gap-2'>
       <div className='flex justify-start items-center w-full -px-2 rounded-md bg-white border-none outline-none focus-within:shadow-sm'>
