@@ -14,6 +14,7 @@ const Pins = ({ user }) => {
       <div className='bg-gray-50'>
         <NavBar
           searchTerm={searchTerm}
+          user={user}
           setSearchTerm={setSearchTerm}></NavBar>
       </div>
       <div className='h-full'>
