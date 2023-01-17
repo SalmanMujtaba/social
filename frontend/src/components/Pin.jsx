@@ -91,9 +91,9 @@ const Pin = ({ pin: { postedBy, image, _id, destination, save } }) => {
                   rel='noreferrer'
                   className='bg-white flex items-center gap-2 text-black font-bold p-2 pl-4 pr-4 rounderd-full opacity-70 hover:100 hover:shadow-md'>
                   <BsFillArrowUpRightCircleFill></BsFillArrowUpRightCircleFill>
-                  {destination.length > 20
-                    ? destination.slice(8, 20)
-                    : destination.slice(8)}
+                  {destination.length > 15
+                    ? destination.slice(0, 15) + "..."
+                    : destination}
                 </a>
               )}
               {postedBy?._id === user?.bus && (
@@ -116,7 +116,7 @@ const Pin = ({ pin: { postedBy, image, _id, destination, save } }) => {
         className='flex gap-2 mt-2 items-center'>
         <img
           src={postedBy?.image}
-          className='w-8 h-8 rounded-full object-contain'
+          className='w-8 h-8 rounded-full object-cover'
           alt='user profile'></img>
         <p className='font-semibold capitalize'>{postedBy?.userName}</p>
       </Link>
