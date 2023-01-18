@@ -4,15 +4,14 @@ import React from "react";
 import { client } from "../client";
 // import { client } from "../client";
 import jwt_decode from "jwt-decode";
+import { useNavigate } from "react-router-dom";
 import logo from "../assets/logowhite.png";
 import shareVideo from "../assets/share.mp4";
-import { useNavigate } from "react-router-dom";
 
 const Login = () => {
   const navigate = useNavigate();
   const responseGoogle = (response) => {
     const decodedCredentials = jwt_decode(response.credential);
-    console.log(decodedCredentials, "==");
     localStorage.setItem("user", JSON.stringify(decodedCredentials));
     const { name, sub, picture } = decodedCredentials;
     const doc = {
@@ -45,23 +44,14 @@ const Login = () => {
               <img
                 src={logo}
                 width='130px'
+                alt='logo'
               />
             </div>
 
             <div className='shadow-2xl'>
               <GoogleLogin
-                // clientId={`${process.env.REACT_APP_GOOGLE_API_TOKEN}`}
-                // render={(renderProps) => (
-                //   <button
-                //     type='button'
-                //     className='bg-mainColor flex justify-center items-center p-3 rounded-lg cursor-pointer outline-none'
-                //     onClick={renderProps.onClick}
-                //     disabled={renderProps.disabled}>
-                //   </button>
-                // )}
                 onSuccess={responseGoogle}
                 onFailure={responseGoogle}
-                // cookiePolicy='single_host_origin'
               />
             </div>
           </div>
