@@ -1,27 +1,29 @@
-import { Link, useParams } from "react-router-dom";
 import React, { useEffect, useState } from "react";
+import { Link, useParams } from "react-router-dom";
 import { client, urlFor } from "../client";
 import { pinDetailMorePinQuery, pinDetailQuery } from "../utils/data";
 
-import MasonryLayout from "./MasonryLayout";
+import { useCallback } from "react";
 import { MdDownloadForOffline } from "react-icons/md";
-import Spinner from "./Spinner";
 import { v4 as uuidv4 } from "uuid";
+import { fetchUser } from "../utils/fetchUser";
+import MasonryLayout from "./MasonryLayout";
+import Spinner from "./Spinner";
 
 const PinDetail = ({ user }) => {
+  user = user || fetchUser();
   const { pinId } = useParams();
   const [pins, setPins] = useState();
   const [pinDetail, setPinDetail] = useState();
   const [comment, setComment] = useState("");
   const [addingComment, setAddingComment] = useState(false);
-
-  const fetchPinDetails = () => {
+  const fetchPinDetails = useCallback(() => {
     const query = pinDetailQuery(pinId);
 
     if (query) {
       client.fetch(`${query}`).then((data) => {
         setPinDetail(data[0]);
-        console.log(data);
+        console.log(data[0]);
         if (data[0]) {
           const query1 = pinDetailMorePinQuery(data[0]);
           client.fetch(query1).then((res) => {
@@ -30,11 +32,11 @@ const PinDetail = ({ user }) => {
         }
       });
     }
-  };
+  }, [pinId]);
 
   useEffect(() => {
     fetchPinDetails();
-  }, [pinId]);
+  }, [fetchPinDetails, pinId]);
 
   const addComment = () => {
     if (comment) {
@@ -47,7 +49,7 @@ const PinDetail = ({ user }) => {
           {
             comment,
             _key: uuidv4(),
-            postedBy: { _type: "postedBy", _ref: user._id },
+            postedBy: { _type: "postedBy", _ref: user?._id },
           },
         ])
         .commit()
@@ -80,57 +82,57 @@ const PinDetail = ({ user }) => {
             <div className='flex items-center justify-between'>
               <div className='flex gap-2 items-center'>
                 <a
-                  href={`${pinDetail.image.asset.url}?dl=`}
+                  href={`${pinDetail?.image?.asset?.url}?dl=`}
                   download
                   className='bg-secondaryColor p-2 text-xl rounded-full flex items-center justify-center text-dark opacity-75 hover:opacity-100'>
                   <MdDownloadForOffline />
                 </a>
               </div>
               <a
-                href={pinDetail.destination}
+                href={pinDetail?.destination}
                 target='_blank'
                 rel='noreferrer'>
-                {pinDetail.destination?.slice(8)}
+                {pinDetail?.destination?.slice(8)}
               </a>
             </div>
             <div>
               <h1 className='text-4xl font-bold break-words mt-3'>
-                {pinDetail.title}
+                {pinDetail?.title}
               </h1>
-              <p className='mt-3'>{pinDetail.about}</p>
+              <p className='mt-3'>{pinDetail?.about}</p>
             </div>
             <Link
-              to={`/user-profile/${pinDetail?.postedBy._id}`}
+              to={`/user-profile/${pinDetail?.postedBy?._id}`}
               className='flex gap-2 mt-5 items-center bg-white rounded-lg '>
               <img
-                src={pinDetail?.postedBy.image}
+                src={pinDetail?.postedBy?.image}
                 className='w-10 h-10 rounded-full'
                 alt='user-profile'
               />
-              <p className='font-bold'>{pinDetail?.postedBy.userName}</p>
+              <p className='font-bold'>{pinDetail?.postedBy?.userName}</p>
             </Link>
             <h2 className='mt-5 text-2xl'>Comments</h2>
             <div className='max-h-370 overflow-y-auto'>
               {pinDetail?.comments?.map((item) => (
                 <div
                   className='flex gap-2 mt-5 items-center bg-white rounded-lg'
-                  key={item.comment}>
+                  key={item?.comment}>
                   <img
-                    src={item.postedBy?.image}
+                    src={item?.postedBy?.image}
                     className='w-10 h-10 rounded-full cursor-pointer'
                     alt='user-profile'
                   />
                   <div className='flex flex-col'>
-                    <p className='font-bold'>{item.postedBy?.userName}</p>
-                    <p>{item.comment}</p>
+                    <p className='font-bold'>{item?.postedBy?.userName}</p>
+                    <p>{item?.comment}</p>
                   </div>
                 </div>
               ))}
             </div>
             <div className='flex flex-wrap mt-6 gap-3'>
-              <Link to={`/user-profile/${user._id}`}>
+              <Link to={`/user-profile/${user?._id}`}>
                 <img
-                  src={user.image}
+                  src={user?.image}
                   className='w-10 h-10 rounded-full cursor-pointer'
                   alt='user-profile'
                 />
