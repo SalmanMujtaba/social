@@ -15,30 +15,30 @@ export const userQuery = (userId) => {
   // save ----> postedBy
   // postedby is nothing but a reference to the user document.
 export const searchQuery = (searchTerm) => {
-  return `*[_type== "pin" && titles match == '${searchTerm}*' || category match '${searchTerm}*' || about match '${searchTerm}*']{
-      image {
-        asset -> {
-          url
-        }
-      },
-      _id,
-      destination,
-      postedBy -> {
-        _id,
-        userName,
-        image
-      },
-      save[] {
-        _key,
-        postedBy -> {
-          _id,
-          userName,
-          image
+  const query = `*[_type == "pin" && title match '${searchTerm}*' || category match '${searchTerm}*' || about match '${searchTerm}*']{
+        image{
+          asset->{
+            url
+          }
         },
-      },
-    }`;
-}
-
+            _id,
+            destination,
+            postedBy->{
+              _id,
+              userName,
+              image
+            },
+            save[]{
+              _key,
+              postedBy->{
+                _id,
+                userName,
+                image
+              },
+            },
+          }`;
+  return query;
+};
 // Get all the feed for all the categories.
 export const feedQuery = `*[_type== "pin"] | order(_createAt desc) {
   image {
